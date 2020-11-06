@@ -1,0 +1,47 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.app_main,
+.app_header form,
+.word  {
+    display: flex;
+}
+
+.app_header {
+    border-bottom: 1px solid #ccc;
+}
+
+.app_categories,
+.app_words,
+.app_categories_form,
+.app_words_form {
+    padding: 20px;
+}
+
+.app_categories,
+.app_categories_form {
+    min-width: 250px;
+
+    background-color: #ededed;
+}
+
+.app_categories ul,
+.app_words ul {
+    list-style: none;
+}
+
+.app_words {
+    width: 100%;
+}
+
+.word {
+    background-color: #ededed;
+    padding: 10px;
+    margin-bottom: 20px;
+
+    width: calc(80% - 40px);
+
+    justify-content: space-between;
+}
