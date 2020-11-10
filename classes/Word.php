@@ -2,7 +2,7 @@
 
 class Word {
 
-    public $data = [
+    private $data = [
         'word' => '',
         'translate' => ''
     ];
@@ -15,7 +15,7 @@ class Word {
         $this->set($word, $translate);
     }
 
-    function set($word, $translate) {
+    private function set($word, $translate) {
         if (!empty($word)) $this->data['word'] = $word;
         if (!empty($translate)) $this->data['translate'] = $translate;
     }
