@@ -13,7 +13,10 @@ class Words {
         if (empty($translate)) $translate = Translate::get($word);
 
         if (!empty($translate)) {
-            $word = new Word($word, $translate);
+            $category = '';
+            if (isset($_GET['category'])) $category = $_GET['category'];
+
+            $word = new Word($word, $translate, $category);
 
             array_push(self::$data, $word->get());
 

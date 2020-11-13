@@ -4,20 +4,19 @@ class Word {
 
     private $data = [
         'word' => '',
-        'translate' => ''
+        'translate' => '',
+        'category' => ''
     ];
 
-    function __construct($word, $translate) {
-        $this->set($word, $translate);
+    function __construct($word, $translate, $category = '') {
+        $this->set($word, $translate, $category);
     }
 
-    function edit($word = '', $translate = '') {
-        $this->set($word, $translate);
-    }
-
-    private function set($word, $translate) {
+    private function set($word, $translate, $category = '') {
         if (!empty($word)) $this->data['word'] = $word;
         if (!empty($translate)) $this->data['translate'] = $translate;
+
+        if ($category !== '') $this->data['category'] = $category;
     }
 
     function get() {

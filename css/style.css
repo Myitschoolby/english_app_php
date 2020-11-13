@@ -45,3 +45,11 @@
 
     justify-content: space-between;
 }
+
+.category {
+    display: flex;
+}
+
+.category_btns {
+    margin-left: auto;
+}

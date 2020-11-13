@@ -6,6 +6,7 @@ require_once 'Words.php';
 class English {
 
     private static function requests() {
+        Categories::get_data();
         Words::get_data();
 
         if (isset($_POST['word_add'])) {
@@ -28,6 +29,27 @@ class English {
                 exit;
             }
         }
+
+        if (isset($_POST['category_add'])) {
+            Categories::add($_POST['category_name']);
+        }
+
+        if (isset($_POST['category_save'])) {
+            if (Categories::edit($_GET['category'], $_POST['category_name'])) {
+                header('Location: /');
+                exit;
+            }
+        }
+
+        if (isset($_GET['category']) && 
+            isset($_GET['action']) &&
+            $_GET['action'] === 'delete'
+        ) {
+            if (Categories::delete($_GET['category'])) {
+                header('Location: /');
+                exit;
+            }
+        }
     }
 
     private static function get_categories() {
@@ -36,10 +58,19 @@ class English {
         $html = '';
 
         foreach ($categories_data as $index => $category) {
-            $html .= '<li><a href="#">' . $category . '</a></li>';
+            $html .= '<li class="category">
+                <a href="?category=' . $index . '">' . $category . '</a>
+                <div class="category_btns">
+                    <a href="/?category=' . $index . '&action=edit">Edit</a>
+                    <a href="/?category=' . $index . '&action=delete">X</a>
+                </div>
+            </li>';
         }
 
-        return !empty($html) ? '<ul>' . $html . '</ul>' : '';
+        return !empty($html) ? '<ul>
+            <li><a href="/">Home</a></li>
+            ' . $html . '
+        </ul>' : '';
     }
 
     private static function get_words() {
@@ -48,9 +79,18 @@ class English {
         $html = '';
 
         foreach ($words_data as $index => $word) {
+            if (isset($_GET['category']) && 
+                ($_GET['category'] == '' || 
+                $_GET['category'] != $word['category'])
+            ) continue;
+
+            $category_name = '';
+            if ($word['category'] !== '') $category_name = Categories::get($word['category']);
+
             $html .= '<li class="word">
                 <div class="word_name">' . $word['word'] . '</div>
                 <div class="word_translate">' . $word['translate'] . '</div>
+                ' . (!empty($category_name) ? '<div class="word_category">' . $category_name .  '</div>' : '') . '
                 <div class="word_btns">
                     <a href="/?word=' . $index . '&action=edit">Edit</a>
                     <a href="/?word=' . $index . '&action=delete">X</a>
@@ -71,6 +111,12 @@ class English {
             $word_translate = Words::get($_GET['word'])['translate'];
         }
 
+        if (isset($_GET['category']) && 
+        isset($_GET['action']) && 
+        $_GET['action'] === 'edit') {
+            $category_name = Categories::get($_GET['category']);
+        }
+
         echo '
         <div class="app">
         
@@ -78,8 +124,13 @@ class English {
                 <form method="POST">
 
                     <div class="app_categories_form">
-                        <input type="text" name="category_name" placeholder="Category name" />
-                        <button name="category_add">Add</button>
+                        <input 
+                            type="text" 
+                            name="category_name" 
+                            placeholder="Category name"
+                            value="' . (!empty($category_name) ? $category_name : '') . '" 
+                    />
+                    ' . (!empty($category_name) ? '<button name="category_save">Save</button>' : '<button name="category_add">Add</button>') . '
                     </div>
 
                     <div class="app_words_form">
